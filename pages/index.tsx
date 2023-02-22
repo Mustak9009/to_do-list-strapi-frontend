@@ -29,6 +29,7 @@ export default function Home({todos}:{todos:ToDoType}) {
     }
   }
   async function createTodo(){
+    setTodoInput('');
     const createTodo = gql`
       mutation createTodo($title:String!,$complete:Boolean){
           createTodo(data: { title: $title, complete:$complete }) {
