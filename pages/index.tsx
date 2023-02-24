@@ -65,6 +65,9 @@ export default function Home({todos}:{todos:ToDoType}) {
      const authorTodo = newTodos.filter((item)=> item.id != data.deleteTodo.data.id);
      setNewTodos(authorTodo);
   }
+  function clearAll(){
+    alert("HI");
+  }
   return (  
     <>
       <Head>
@@ -100,7 +103,7 @@ export default function Home({todos}:{todos:ToDoType}) {
                   <footer>
                     <div className="flex justify-between mx-2">
                       <p className="text-gray-500 font-medium">You have {newTodos.length} pending tasks</p>
-                      <button className="bg-[#8e4ae5] text-white px-3  py-1 rounded-[4px]" type="button">Clear All</button>
+                      <button className="bg-[#8e4ae5] text-white px-3  py-1 rounded-[4px]" type="button" onClick={clearAll}>Clear All</button>
                     </div>
                   </footer>}
               </div>
