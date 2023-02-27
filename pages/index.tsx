@@ -17,7 +17,7 @@ type ToDoType = {
 };
 export default function Home({ todos }: { todos: ToDoType }) {
   const [todoInput, setTodoInput] = useState<string>("");
-  const [newTodos, setNewTodos] = useState<ToDo[]>([...todos.data]); //Delete one array using => ... spread operator
+  const [newTodos, setNewTodos] = useState<ToDo[]>([...todos.data]); //Add one array using => ... spread operator
   const [inputEmpty, setInputEmpty] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -65,7 +65,7 @@ export default function Home({ todos }: { todos: ToDoType }) {
         }
       }
     `;
-    const data = await dataTunnel(delteTodo, { id: id });
+    const data = await dataTunnel(delteTodo, { id }); //You can also do this -> id:id
     const authorTodo = newTodos.filter(
       (item) => item.id != data.deleteTodo.data.id
     );
@@ -73,19 +73,31 @@ export default function Home({ todos }: { todos: ToDoType }) {
   }
   async function clearAll() { //I use fetch api because -> grphql custom controller not work at this thime .. why i'do not know
     const ids:string[] = newTodos.map((item)=>item.id);
-    await fetch("http://localhost:1337/api/todos/deleteAll", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({
-        data: {
-          ids, //send todo's ids
-        },
-      }),
-    });
-    setNewTodos([]); //newTodos is empty.
+    // await fetch("http://localhost:1337/api/todos/deleteAll", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     // 'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   body: JSON.stringify({
+    //     data: {
+    //       ids, //send todo's ids
+    //     },
+    //   }),
+    // });
+    const deleteAllTodo = gql`
+      mutation DeleteAllTodo($ids:[String!]){
+        deleteAllTodo(ids:$ids){
+          count
+        }
+      }
+    `;
+    try{
+      await dataTunnel(deleteAllTodo,{ids});
+      setNewTodos([]); //newTodos is empty.
+    }catch(err){
+      console.log(err);
+    }
   }
   return (
     <>
