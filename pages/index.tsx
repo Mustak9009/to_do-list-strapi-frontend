@@ -17,7 +17,7 @@ type ToDoType = {
 };
 export default function Home({ todos }: { todos: ToDoType }) {
   const [todoInput, setTodoInput] = useState<string>("");
-  const [newTodos, setNewTodos] = useState<ToDo[]>([...todos.data]); //Add one array using => ... spread operator
+  const [newTodos, setNewTodos] = useState<ToDo[]>([...todos.data || '']); //Add one array using => ... spread operator
   const [inputEmpty, setInputEmpty] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
