@@ -5,6 +5,7 @@ export interface InputType {
     confirmPassword?:String
 }
 export type InputEroorType = {
+    fullNameEror?:String
     emailEror?:String,
     passwordErro?:String,
     confirmPasswordError?:String

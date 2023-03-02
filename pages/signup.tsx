@@ -4,9 +4,10 @@ import {Context} from '../contexts/FormValidationContext';
 import {InputEroorType,InputType} from '../types/input';
 import { gql } from "graphql-request";
 import { dataTunnel } from "@/data/dataTunnel";
+
 export default function login() {
   const {inputDataValidation} = useContext(Context); //use context for maintain the -> DRY
-  const [errors,setErros] = useState<InputEroorType | ''>({emailEror:'',passwordErro:'',confirmPasswordError:''});
+  const [errors,setErros] = useState<InputEroorType | ''>({fullNameEror:'',emailEror:'',passwordErro:'',confirmPasswordError:''});
   const [formData,setFormData] = useState<InputType>({
       fullName:'',
       email:'',
@@ -33,12 +34,11 @@ export default function login() {
                 jwt
               }
             }
-        `;
-        const data = await dataTunnel(registerUser, {username:fullName,email:email,password:password});
-        if(data){
-          setVerifyEmail(true);
-        }
-        setErros({emailEror:'',passwordErro:'',confirmPasswordError:''})
+        `
+        const data = await dataTunnel(registerUser, {username:fullName,email:email,password:password})
+        if(!data){
+          setErros({emailEror:'Email already taken',fullNameEror:'User name already taken'});
+        }else setErros({emailEror:'',passwordErro:'',confirmPasswordError:''});
         setDisableButton(false);
       }
   }
@@ -52,11 +52,12 @@ export default function login() {
               Sign <span className="text-[#8e4ae5] ">up</span>
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              <div>
+              <div className="relative">
                 <label htmlFor="fullName" className="block mb-2 text-sm font-medium text-gray-900 ">
                   Full name
                 </label>
                 <input type="text" name="fullName" id="fullName" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  " placeholder="Full name" required onChange={handleInputChange}/>
+                <span className="text-sm text-red-500 absolute">{errors && errors.fullNameEror}</span>
               </div>
               <div className="relative">
                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 ">
@@ -70,14 +71,14 @@ export default function login() {
                   Password
                 </label>
                 <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  " required onChange={handleInputChange}/>
-                <span className="text-sm text-red-500 absolute">{errors && errors && errors.passwordErro}</span>
+                <span className="text-sm text-red-500 absolute">{errors  && errors.passwordErro}</span>
               </div>
               <div className="relative">
                 <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900  ">
                   Confirm password
                 </label>
                 <input type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  " required onChange={handleInputChange}/>
-                <span className="text-sm text-red-500 absolute">{errors && errors && errors.confirmPasswordError}</span>
+                <span className="text-sm text-red-500 absolute">{errors  && errors.confirmPasswordError}</span>
               </div>
               <button type="submit" disabled={disableButton} className="w-full text-white bg-[#8e4ae5] bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                 Sign up
