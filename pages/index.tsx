@@ -4,6 +4,8 @@ import { MdAddBox, MdOutlineDeleteOutline } from "react-icons/md";
 import { gql } from "graphql-request";
 import { dataTunnel } from "../data/dataTunnel";
 import { useRef, useState } from "react";
+import {useSession,signOut,getSession} from "next-auth/react";      
+
 type ToDo = {
   id: string;
   attributes: {
@@ -15,11 +17,12 @@ type ToDoType = {
   //Multiple todo's
   data: [ToDo];
 };
-export default function Home({ todos }: { todos: ToDoType }) {
+export default function Home({ todos}: { todos: ToDoType }) {
   const [todoInput, setTodoInput] = useState<string>("");
   const [newTodos, setNewTodos] = useState<ToDo[]>([...todos.data || '']); //Add one array using => ... spread operator
   const [inputEmpty, setInputEmpty] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       createTodo();
@@ -173,11 +176,20 @@ const query = gql`
     }
   }
 `;
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({req}) => {
   const data = await dataTunnel(query);
+  const sesson = await getSession({req});
+  if(!sesson){
+    return{ //This code help to redirect user ... when user not have sesson
+      redirect:{
+        destination:'/login',
+        permanent:false
+      }
+    }
+  }
   return {
     props: {
-      todos: data?.todos || [],
+      todos: data?.todos || []
     },
   };
 };

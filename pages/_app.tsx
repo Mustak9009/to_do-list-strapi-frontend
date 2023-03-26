@@ -1,14 +1,18 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
-import NavBar from '../components/NavBar';
 import {FormValidationContext} from '../contexts/FormValidationContext';
-export default function App({ Component, pageProps }: AppProps) {
+import {SessionProvider} from 'next-auth/react';
+import Login from '@/components/login';
+
+export default function App({ Component, pageProps:{session,...pageProps} }: AppProps) {
   return(
     <>
-      <NavBar/>
+      <SessionProvider>
+      <Login/>
       <FormValidationContext>
-        <Component {...pageProps} />
+          <Component {...pageProps} session={session}/>
       </FormValidationContext>
+      </SessionProvider>
     </>
     ) 
 }
