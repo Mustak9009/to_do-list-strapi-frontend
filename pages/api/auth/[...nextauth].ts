@@ -14,4 +14,5 @@ export default nextAuth({
             return session // The return type will match the one returned in `useSession()`
         },
     },
+    secret: NEXT_PUBLIC_SECRET,
 })
