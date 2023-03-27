@@ -176,7 +176,7 @@ const query = gql`
     }
   }
 `;
-export const getServerSideProps: GetServerSideProps = async ({req}) => {
+export const getServerSideProps: GetServerSideProps = async ({req}:{req:any}) => {
   const data = await dataTunnel(query);
   const sesson = await getSession({req});
   if(!sesson){
