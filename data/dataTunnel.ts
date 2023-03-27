@@ -1,6 +1,6 @@
 import {GraphQLClient} from 'graphql-request';
 
-const API_URL = 'http://127.0.0.1:1337/graphql';
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL as string;
 
 export async function dataTunnel(query:string,variable?:Object){
     const graphqlClient = new GraphQLClient(API_URL,{

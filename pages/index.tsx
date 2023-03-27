@@ -4,7 +4,7 @@ import { MdAddBox, MdOutlineDeleteOutline } from "react-icons/md";
 import { gql } from "graphql-request";
 import { dataTunnel } from "../data/dataTunnel";
 import { useRef, useState } from "react";
-import {useSession,signOut,getSession} from "next-auth/react";      
+import {getSession} from "next-auth/react";      
 
 type ToDo = {
   id: string;

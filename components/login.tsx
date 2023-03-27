@@ -7,7 +7,7 @@ import type { GetServerSideProps} from 'next';
 export default function Login() {
   const {data:session} = useSession();
     async function googleAuthHandlere(){
-        signIn('google',{callbackUrl:'http://localhost:3003'});
+        signIn('google',{callbackUrl:process.env.NEXT_PUBLIC_GOOGLE_CALLBACK});
     }
     if(session?.user) {
       return( 
